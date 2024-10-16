@@ -7,4 +7,6 @@
 namespace primitives
 {
 void draw_triangle(glm::vec2 pos, float size, const glm::vec3& color);
+void draw_circle(glm::vec2 pos, float radius, const glm::vec3& color);
+void draw_square(glm::vec2 pos, float size, const glm::vec3& color);
 } // namespace primitives
