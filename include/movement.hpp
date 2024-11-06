@@ -8,7 +8,7 @@ struct Movement {
     glm::vec2 velocity;
     glm::vec2 acceleration;
 
-    Movement(glm::vec2 pos) : position(pos), velocity(0.0f), acceleration(0.0f) {}
+    Movement(glm::vec2 pos, glm::vec2 vel) : position(pos), velocity(vel), acceleration(0.0f) {}
 };
 
 void apply_force(Movement& move, const glm::vec2& force);
