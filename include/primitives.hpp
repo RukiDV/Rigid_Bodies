@@ -5,6 +5,8 @@
 #include <glm/vec4.hpp>
 #include <SDL2/SDL_opengl.h>
 
+#include "movement.hpp"
+
 namespace primitives
 {
 
@@ -21,4 +23,9 @@ void draw_triangle(glm::vec2 pos, float size, const glm::vec3& color);
 void draw_square(glm::vec2 pos, float size, const glm::vec3& color);
 std::vector<Circle>& get_circles();
 void set_circles(const std::vector<Circle>& new_circles);
+void circle_pos_vel(float& position, float& velocity, float radius, float boundary_min, float boundary_max);
+void check_circle_boundaries(Movement& movement, float radius);
+void check_triangle_boundaries(Movement& movement, float size);
+void square_pos_vel(float& position, float& velocity, float half_size, float boundary_min, float boundary_max, const glm::vec2 vertices[4], bool is_x_axis);
+void check_square_boundaries(Movement& movement, float size);
 } // namespace primitives

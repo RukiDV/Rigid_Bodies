@@ -93,4 +93,92 @@ void set_circles(const std::vector<Circle>& new_circles)
     update_circle();
 }
 
+void circle_pos_vel(float& position, float& velocity, float radius, float boundary_min, float boundary_max) 
+{
+    if (position - radius < boundary_min || position + radius > boundary_max) 
+    {
+        velocity = -velocity;
+        // correct position to within bounds
+        if (position - radius < boundary_min) 
+        {
+            position = boundary_min + radius;
+        }
+        if (position + radius > boundary_max) 
+        {
+            position = boundary_max - radius;
+        }
+    }
+}
+
+void check_circle_boundaries(Movement& movement, float radius) 
+{
+    circle_pos_vel(movement.position.x, movement.velocity.x, radius, -1.0f, 1.0f);
+    circle_pos_vel(movement.position.y, movement.velocity.y, radius, -1.0f, 1.0f);
+}
+
+void triangle_pos_vel(float& position, float& velocity, const glm::vec2 vertices[3], bool is_x_axis) {
+    for (int i = 0; i < 3; ++i) {
+        float vertex = is_x_axis ? vertices[i].x : vertices[i].y;
+        if (vertex < -1.0f || vertex > 1.0f) 
+        {
+            velocity = -velocity;
+            if (vertex < -1.0f) 
+            {
+                position += (-1.0f - vertex);
+            } else if (vertex > 1.0f) 
+            {
+                position += (1.0f - vertex);
+            }
+            break;
+        }
+    }
+}
+
+void check_triangle_boundaries(Movement& movement, float size) 
+{
+    float half_size = size / 2.0f;
+    glm::vec2 vertices[3] = 
+    {
+        {movement.position.x, movement.position.y + half_size},  // top
+        {movement.position.x - half_size, movement.position.y - half_size},  // bottom left
+        {movement.position.x + half_size, movement.position.y - half_size}   // bottom right
+    };
+
+    triangle_pos_vel(movement.position.x, movement.velocity.x, vertices, true);
+    triangle_pos_vel(movement.position.y, movement.velocity.y, vertices, false);
+}
+
+void square_pos_vel(float& position, float& velocity, float half_size, float boundary_min, float boundary_max, const glm::vec2 vertices[4], bool is_x_axis) 
+{
+    for (int i = 0; i < 4; ++i) {
+        float vertex = is_x_axis ? vertices[i].x : vertices[i].y;
+        if (vertex < boundary_min || vertex > boundary_max) {
+            velocity = -velocity;
+            if (vertex < boundary_min) 
+            {
+                position = boundary_min + half_size;
+            } else if (vertex > boundary_max) 
+            {
+                position = boundary_max - half_size;
+            }
+            break;
+        }
+    }
+}
+
+void check_square_boundaries(Movement& movement, float size) 
+{
+    float half_size = size / 2.0f;
+    glm::vec2 vertices[4] = {
+        {movement.position.x - half_size, movement.position.y - half_size}, // bottom left
+        {movement.position.x + half_size, movement.position.y - half_size}, // bottom right
+        {movement.position.x - half_size, movement.position.y + half_size}, // top left
+        {movement.position.x + half_size, movement.position.y + half_size}  // top right
+    };
+
+    square_pos_vel(movement.position.x, movement.velocity.x, half_size, -1.0f, 1.0f, vertices, true);
+    square_pos_vel(movement.position.y, movement.velocity.y, half_size, -1.0f, 1.0f, vertices, false);
+}
+
+
 } // namespace primitives
